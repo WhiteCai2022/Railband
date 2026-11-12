@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="cn.railband.mvp.test" android:versionCode="1" android:versionName="1">
+ <uses-sdk android:minSdkVersion="28" android:targetSdkVersion="36" />
+ <application android:label="RailBand integration tests" />
+ <instrumentation android:name="cn.railband.mvp.SmokeTest" android:targetPackage="cn.railband.mvp" android:functionalTest="true" />
+ <instrumentation android:name="cn.railband.mvp.V3SmokeTest" android:targetPackage="cn.railband.mvp" android:functionalTest="true" />
+ <instrumentation android:name="cn.railband.mvp.V4LocationTest" android:targetPackage="cn.railband.mvp" android:functionalTest="true" />
+ <instrumentation android:name="cn.railband.mvp.V4IntervalTest" android:targetPackage="cn.railband.mvp" android:functionalTest="true" />
+</manifest>

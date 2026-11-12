@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ row['route'] or '测量详情' }} · 轨途测速</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='vendor/leaflet/leaflet.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static',filename='detail.css') }}">
+  <script defer src="{{ url_for('static',filename='vendor/leaflet/leaflet.js') }}"></script>
+  <script defer src="{{ url_for('static',filename='detail.js') }}"></script>
+</head>
+<body>
+<header class="detail-header">
+  <div><a class="back-link" href="{{ url_for('journey_index') if journey else url_for('index') }}">← 返回{{ '行程' if journey else '测量' }}列表</a>
+    <h1>{{ row['route'] or ('行程' if journey else '测量') ~ ' #' ~ row['id'] }}</h1>
+    <p>{{ row['device'] or '未知设备' }} · {{ '行程' if journey else '普通测量' }} #{{ row['id'] }}</p>
+  </div>
+  <div class="actions"><a class="button" href="{{ download_url }}">下载完整数据</a><a class="button danger" href="{{ delete_url }}">删除</a></div>
+</header>
+<main id="detail" data-url="{{ data_url }}">
+  <p id="load-state" class="load-state" role="status">正在读取测量信息与定位轨迹…</p>
+  <div id="detail-content" hidden>
+    <p id="completeness" class="notice" hidden></p>
+    <section class="metric-grid" aria-label="测量概况">
+      <div class="metric"><span>测量时长</span><strong id="duration">—</strong><small id="status">—</small></div>
+      <div class="metric"><span>上行平均速度</span><strong id="up-average">—</strong><small id="up-peak">—</small></div>
+      <div class="metric"><span>下行平均速度</span><strong id="down-average">—</strong><small id="down-peak">—</small></div>
+      <div class="metric"><span>有效定位点</span><strong id="fix-count">—</strong><small id="point-count">—</small></div>
+    </section>
+    <section class="map-card">
+      <div class="section-top"><div><h2>行程轨迹</h2><p>按有效定位时间连线，点选轨迹查看当时的测量信息。</p></div><button id="fit-route" class="secondary" type="button">查看全程</button></div>
+      <div class="map-layout">
+        <div class="map-wrap"><div id="map" aria-label="可缩放和拖动的行程轨迹地图"></div><p id="map-message" class="map-message" role="status" hidden></p></div>
+        <aside class="point-panel" aria-label="选中定位点">
+          <div class="point-title"><h3>定位点详情</h3><span id="selected-index">—</span></div>
+          <p id="selected-time" class="point-time">选择一个定位点</p>
+          <dl id="point-facts"></dl>
+          <div class="point-rates"><div><span>上行</span><strong id="point-up">—</strong></div><div><span>下行</span><strong id="point-down">—</strong></div></div>
+          <p class="subtle">网速取该定位点关联的实际测量记录。</p>
+        </aside>
+      </div>
+      <div id="position-control" class="position-control" hidden><label for="track-position">逐点查看</label><input id="track-position" type="range" min="0" value="0" step="1" aria-label="选择轨迹中的定位点"><span id="slider-count"></span></div>
+      <div class="map-legend"><span><i class="legend-dot start"></i>起点</span><span><i class="legend-dot end"></i>终点</span><span><i class="legend-line"></i>有效定位轨迹</span><span id="gap-note"></span></div>
+      <p class="subtle">地图连接已采集的位置，不会补画缺失的路线。底图暂时无法加载时，轨迹仍可查看。</p>
+    </section>
+    <section class="info-card"><h2>测量信息</h2><dl id="measurement-facts" class="info-facts"></dl><p class="subtle">平均速度按有效测速区间加权计算；断网等待和缺失区间不补零。双向测速的上下行分别统计。</p></section>
+    <div id="warnings"></div>
+  </div>
+  <noscript><p class="notice">请开启浏览器 JavaScript 查看地图，仍可使用上方按钮下载原始数据。</p></noscript>
+</main>
+</body></html>

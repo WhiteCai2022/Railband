@@ -1,0 +1,24 @@
+[Unit]
+Description=RailBand private measurement archive
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=railband
+Group=railband
+UMask=0077
+WorkingDirectory=/opt/railband
+EnvironmentFile=/etc/railband/railband.env
+ExecStart=/usr/bin/gunicorn --bind 127.0.0.1:8765 --workers 2 --timeout 180 'app:create_app()'
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/railband
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

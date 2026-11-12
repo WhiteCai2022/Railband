@@ -1,0 +1,6 @@
+[Unit]
+Description=Renew RailBand IP HTTPS certificate
+
+[Service]
+Type=oneshot
+ExecStart=/opt/railband-certbot/bin/certbot renew --quiet --deploy-hook "/usr/bin/systemctl reload nginx"

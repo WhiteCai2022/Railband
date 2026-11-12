@@ -1,0 +1,24 @@
+[Unit]
+Description=Rail bandwidth configurable iperf3 endpoint
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+ExecStart=/usr/local/bin/rail-iperf3 -s -p 5201 --idle-timeout 60 --rcv-timeout 8000 --snd-timeout 8000 --cntl-ka=4/1/3
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=192M
+TasksMax=32
+LimitNOFILE=1024
+
+[Install]
+WantedBy=multi-user.target
